@@ -28,6 +28,17 @@
                 deferred.reject(response);
               });
             return deferred.promise;
+          },
+          save: function(res){
+            var deferred = $q.defer();
+            resourceService.resource.save(res,
+              function(response) {
+                deferred.resolve(response);
+              },
+              function(response) {
+                deferred.reject(response);
+              });
+            return deferred.promise;
           }
         };
       }
