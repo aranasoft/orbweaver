@@ -7,7 +7,7 @@
     return function(url, params, methods) {
       var defaults = {
         update: {method: 'put',isArray: false},
-        create: {method: 'post'}
+        create: { method: 'post' }
       };
 
       methods = angular.extend(defaults, methods);
@@ -71,6 +71,9 @@
             } else {
               return deferInstance(res, "$create");
             }
+          },
+          delete: function(res) {
+            return deferInstance(res, "$delete", { id: res.id });
           }
         };
       }
