@@ -3,45 +3,77 @@
 
   var orbweaver = angular.module('orbweaver', ['ng']);
 
-  orbweaver.factory("restfulService", function($q) {
+  orbweaver.factory("restfulResource", ['$resource', function ($resource) {
+    return function(url, params, methods) {
+      var defaults = {
+        update: {method: 'put',isArray: false},
+        create: {method: 'post'}
+      };
+
+      methods = angular.extend(defaults, methods);
+      
+      var resource = $resource(url, params, methods);
+
+      resource.prototype.$save = function (params, success, failure) {
+        if (!this.id) {
+          this.$create(success, failure);
+        } else {
+          this.$update(success,failure);
+        }
+      };
+
+      return resource;
+    };
+  }]);
+  
+  orbweaver.factory("restfulService", ['$q', function ($q) {
+    var defer = function (fn, params) {
+      params = params || {};
+      var deferred = $q.defer();
+      fn(params,
+        function(response) {
+          deferred.resolve(response);
+        },
+        function(response) {
+          deferred.reject(response);
+        });
+      return deferred.promise;
+    };
+
+    var deferInstance = function(inst, fn, params) {
+      params = params || {};
+      var deferred = $q.defer();
+      inst[fn](params,
+        function(response) {
+          deferred.resolve(response);
+        },
+        function(response) {
+          deferred.reject(response);
+        });
+      return deferred.promise;
+    };
+    
     return {
-      asPromises: function(resourceService) {
+      withPromises: function(restfulResource) {
         return {
-          all: function() {
-            var deferred = $q.defer();
-            resourceService.resource.all({},
-              function(response) {
-                deferred.resolve(response);
-              },
-              function(response) {
-                deferred.reject(response);
-              });
-            return deferred.promise;
+          empty: function() {
+            return new restfulResource();
+          },
+          all: function () {
+            return defer(restfulResource.all);
           },
           find: function(id) {
-            var deferred = $q.defer();
-            resourceService.resource.get({ id: id },
-              function(response) {
-                deferred.resolve(response);
-              },
-              function(response) {
-                deferred.reject(response);
-              });
-            return deferred.promise;
+            return defer(restfulResource.get, { id: id });
           },
-          save: function(res){
-            var deferred = $q.defer();
-            resourceService.resource.save(res,
-              function(response) {
-                deferred.resolve(response);
-              },
-              function(response) {
-                deferred.reject(response);
-              });
-            return deferred.promise;
+          save: function (res) {
+            if (res.id) {
+              return deferInstance(res, "$update", { id: res.id });
+            } else {
+              return deferInstance(res, "$create");
+            }
           }
         };
       }
     };
-  });
+  }]);
 })(window, window.angular);
