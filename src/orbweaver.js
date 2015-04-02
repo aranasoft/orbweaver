@@ -1,7 +1,7 @@
 (function(window, angular, undefined) {
     'use strict';
 
-    var orbweaver = angular.module('orbweaver', ['ng']);
+    var orbweaver = angular.module('orbweaver', ['ngResource']);
 
     orbweaver.factory("restfulResource", ['$resource', function($resource) {
         return function(url, params, methods) {
