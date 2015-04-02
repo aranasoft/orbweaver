@@ -84,5 +84,5 @@
         };
       }
     };
-  }])
+  }]);
 })(window, window.angular);
