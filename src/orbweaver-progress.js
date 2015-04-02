@@ -1,7 +1,7 @@
 (function (window, angular, undefined) {
   'use strict';
 
-  var orbweaver = angular.module('orbProgress', ['orbResource', 'ngResource']);
+  var orbweaver = angular.module('orbProgress', ['orbResource']);
 
   orbweaver.factory("orbRestfulProgressService", ['$q', 'orbProgressService', function ($q, orbRestfulResource, orbProgressService) {
     var defer = function (fn, params) {
