@@ -36,7 +36,7 @@
       return deferred.promise;
     };
 
-    return: function (RestfulResource) {
+    return function (RestfulResource) {
       return {
         empty: function () {
           return new RestfulResource();
