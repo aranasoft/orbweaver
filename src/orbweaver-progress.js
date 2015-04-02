@@ -47,13 +47,13 @@
           },
           find: function (id, params) {
             params = params || {};
-            params = _.extend(params, {id: id});
+            params = angular.extend(params, {id: id});
             return defer(RestfulResource.get, params);
           },
           save: function (res, params) {
             params = params || {};
             if (res.id) {
-              params = _.extend(params, {id: res.id});
+              params = angular.extend(params, {id: res.id});
               return deferInstance(res, "$update", params);
             } else {
               return deferInstance(res, "$create", params);
@@ -61,7 +61,7 @@
           },
           'delete': function (res, params) {
             params = params || {};
-            params = _.extend(params, {id: res.id});
+            params = angular.extend(params, {id: res.id});
             return defer(RestfulResource['delete'], params);
           }
         };
