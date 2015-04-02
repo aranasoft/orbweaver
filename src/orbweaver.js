@@ -1,13 +1,13 @@
-(function(window, angular, undefined) {
+(function (window, angular, undefined) {
   'use strict';
 
   var orbweaver = angular.module('orbweaver', ['ngResource']);
 
-  orbweaver.factory("restfulResource", ['$resource', function($resource) {
-    return function(url, params, methods) {
+  orbweaver.factory("restfulResource", ['$resource', function ($resource) {
+    return function (url, params, methods) {
       var defaults = {
-        update: { method: 'put', isArray: false },
-        create: { method: 'post' }
+        update: {method: 'put', isArray: false},
+        create: {method: 'post'}
       };
 
       methods = angular.extend(defaults, methods);
@@ -26,33 +26,33 @@
     };
   }]);
 
-  orbweaver.factory("restfulService", ['$q', 'progressService', function($q, progressService) {
-    var defer = function(fn, params) {
+  orbweaver.factory("restfulService", ['$q', 'progressService', function ($q, progressService) {
+    var defer = function (fn, params) {
       params = params || {};
       var deferred = $q.defer();
       progressService.start();
       fn(params,
-        function(response) {
+        function (response) {
           progressService.done();
           deferred.resolve(response);
         },
-        function(response) {
+        function (response) {
           progressService.done();
           deferred.reject(response);
         });
       return deferred.promise;
     };
 
-    var deferInstance = function(inst, fn, params) {
+    var deferInstance = function (inst, fn, params) {
       params = params || {};
       var deferred = $q.defer();
       progressService.start();
       inst[fn](params,
-        function(response) {
+        function (response) {
           progressService.done();
           deferred.resolve(response);
         },
-        function(response) {
+        function (response) {
           progressService.done();
           deferred.reject(response);
         });
@@ -60,37 +60,37 @@
     };
 
     return {
-      withPromises: function(restfulResource) {
+      withPromises: function (restfulResource) {
         return {
-          empty: function() {
+          empty: function () {
             return new restfulResource();
           },
-          all: function(params) {
+          all: function (params) {
             return defer(restfulResource.all, params);
           },
-          find: function(id, params) {
+          find: function (id, params) {
             params = params || {};
-            params = _.extend(params, { id: id });
+            params = _.extend(params, {id: id});
             return defer(restfulResource.get, params);
           },
-          save: function(res, params) {
+          save: function (res, params) {
             params = params || {};
             if (res.id) {
-              params = _.extend(params, { id: res.id });
+              params = _.extend(params, {id: res.id});
               return deferInstance(res, "$update", params);
             } else {
               return deferInstance(res, "$create", params);
             }
           },
-          delete: function(res, params) {
-            return deferInstance(res, "$delete", { id: res.id });
+          delete: function (res, params) {
+            return deferInstance(res, "$delete", {id: res.id});
           }
         };
       }
     };
   }]);
 
-  orbweaver.factory("progressService", function() {
+  orbweaver.factory("progressService", function () {
     var progressCounter = 0;
 
     function incrementProgressCounter() {
@@ -108,16 +108,16 @@
     }
 
     return {
-      start: function() {
+      start: function () {
         incrementProgressCounter();
       },
-      done: function() {
+      done: function () {
         decrementProgressCounter();
       }
     };
   });
 
-  orbweaver.factory("messageService", function($rootScope, $timeout) {
+  orbweaver.factory("messageService", function ($rootScope, $timeout) {
     toastr.options = {
       "closeButton": true,
       "debug": false,
@@ -135,16 +135,16 @@
 
 
     return {
-      success: function(message) {
+      success: function (message) {
         toastr.success(message);
       },
-      info: function(message) {
+      info: function (message) {
         toastr.info(message);
       },
-      warning: function(message) {
+      warning: function (message) {
         toastr.warning(message);
       },
-      error: function(message) {
+      error: function (message) {
         toastr.error(message);
       }
     };
@@ -168,7 +168,8 @@
       template: template,
       transclude: true,
       controller: function ($scope, $element, $attrs) {
-        this.expandChild = function() { };
+        this.expandChild = function () {
+        };
       },
       link: function (scope, element, attrs, controller) {
         scope.isCollapsed = true;
