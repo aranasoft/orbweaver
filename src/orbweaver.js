@@ -1,9 +1,9 @@
 (function (window, angular, undefined) {
   'use strict';
 
-  var orbweaver = angular.module('orbweaver', ['ngResource']);
+  var orbweaver = angular.module('asOrbweaver', ['ngResource']);
 
-  orbweaver.factory("restfulResource", ['$resource', function ($resource) {
+  orbweaver.factory("asRestfulResource", ['$resource', function ($resource) {
     return function (url, params, methods) {
       var defaults = {
         update: {method: 'put', isArray: false},
@@ -26,18 +26,18 @@
     };
   }]);
 
-  orbweaver.factory("restfulService", ['$q', 'progressService', function ($q, progressService) {
+  orbweaver.factory("asRestfulService", ['$q', 'asProgressService', function ($q, asProgressService) {
     var defer = function (fn, params) {
       params = params || {};
       var deferred = $q.defer();
-      progressService.start();
+      asProgressService.start();
       fn(params,
         function (response) {
-          progressService.done();
+          asProgressService.done();
           deferred.resolve(response);
         },
         function (response) {
-          progressService.done();
+          asProgressService.done();
           deferred.reject(response);
         });
       return deferred.promise;
@@ -46,32 +46,32 @@
     var deferInstance = function (inst, fn, params) {
       params = params || {};
       var deferred = $q.defer();
-      progressService.start();
+      asProgressService.start();
       inst[fn](params,
         function (response) {
-          progressService.done();
+          asProgressService.done();
           deferred.resolve(response);
         },
         function (response) {
-          progressService.done();
+          asProgressService.done();
           deferred.reject(response);
         });
       return deferred.promise;
     };
 
     return {
-      withPromises: function (restfulResource) {
+      withPromises: function (RestfulResource) {
         return {
           empty: function () {
-            return new restfulResource();
+            return new RestfulResource();
           },
           all: function (params) {
-            return defer(restfulResource.all, params);
+            return defer(RestfulResource.query, params);
           },
           find: function (id, params) {
             params = params || {};
             params = _.extend(params, {id: id});
-            return defer(restfulResource.get, params);
+            return defer(RestfulResource.get, params);
           },
           save: function (res, params) {
             params = params || {};
@@ -82,15 +82,17 @@
               return deferInstance(res, "$create", params);
             }
           },
-          delete: function (res, params) {
-            return deferInstance(res, "$delete", {id: res.id});
+          'delete': function (res, params) {
+            params = params || {};
+            params = _.extend(params, {id: res.id});
+            return defer(RestfulResource['delete'], params);
           }
         };
       }
     };
   }]);
 
-  orbweaver.factory("progressService", function () {
+  orbweaver.factory("asProgressService", function () {
     var progressCounter = 0;
 
     function incrementProgressCounter() {
@@ -116,23 +118,22 @@
       }
     };
   });
-
-  orbweaver.factory("messageService", function ($rootScope, $timeout) {
-    toastr.options = {
-      "closeButton": true,
-      "debug": false,
-      "positionClass": "toast-top-right",
-      "onclick": null,
-      "showDuration": "300",
-      "hideDuration": "1000",
-      "timeOut": "3000",
-      "extendedTimeOut": "1000",
-      "showEasing": "swing",
-      "hideEasing": "linear",
-      "showMethod": "fadeIn",
-      "hideMethod": "fadeOut"
-    };
-
+  orbweaver.constant('asToastrOptions', {
+    "closeButton": true,
+    "debug": false,
+    "positionClass": "toast-top-right",
+    "onclick": null,
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "3000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+  });
+  orbweaver.factory("asMessageService", ['$rootScope', '$timeout', 'asToastrOptions', function ($rootScope, $timeout, asToastrOptions) {
+    toastr.options = asToastrOptions;
 
     return {
       success: function (message) {
@@ -148,5 +149,5 @@
         toastr.error(message);
       }
     };
-  });
+  }]);
 })(window, window.angular);
