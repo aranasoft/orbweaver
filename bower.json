@@ -3,7 +3,7 @@
   "version": "0.102.0",
   "homepage": "https://github.com/aranasoft/orbweaver",
   "authors": [
-    "Dennis Burton <dburton@aranasoft.com>"
+    "Dennis Burton <dburton@aranasoft.com>",
     "Jay Harris <jay@aranasoft.com>"
   ],
   "description": "A collection of utilities for AngularJS Development",
@@ -18,8 +18,8 @@
     "bower_components"
   ],
   "dependencies": {
-    "angular": "~1.2",
-    "angular-resource": "~1.2",
+    "angular": ">=1.2",
+    "angular-resource": ">=1.2",
     "nprogress": "~0.1",
     "toastr": "~2.0"
   }
