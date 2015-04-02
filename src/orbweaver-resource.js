@@ -53,36 +53,34 @@
       return deferred.promise;
     };
 
-    return {
-      withPromises: function (RestfulResource) {
-        return {
-          empty: function () {
-            return new RestfulResource();
-          },
-          all: function (params) {
-            return defer(RestfulResource.query, params);
-          },
-          find: function (id, params) {
-            params = params || {};
-            params = angular.extend(params, {id: id});
-            return defer(RestfulResource.get, params);
-          },
-          save: function (res, params) {
-            params = params || {};
-            if (res.id) {
-              params = angular.extend(params, {id: res.id});
-              return deferInstance(res, "$update", params);
-            } else {
-              return deferInstance(res, "$create", params);
-            }
-          },
-          'delete': function (res, params) {
-            params = params || {};
+    return: function (RestfulResource) {
+      return {
+        empty: function () {
+          return new RestfulResource();
+        },
+        all: function (params) {
+          return defer(RestfulResource.query, params);
+        },
+        find: function (id, params) {
+          params = params || {};
+          params = angular.extend(params, {id: id});
+          return defer(RestfulResource.get, params);
+        },
+        save: function (res, params) {
+          params = params || {};
+          if (res.id) {
             params = angular.extend(params, {id: res.id});
-            return defer(RestfulResource['delete'], params);
+            return deferInstance(res, "$update", params);
+          } else {
+            return deferInstance(res, "$create", params);
           }
-        };
-      }
+        },
+        'delete': function (res, params) {
+          params = params || {};
+          params = angular.extend(params, {id: res.id});
+          return defer(RestfulResource['delete'], params);
+        }
+      };
     };
   }]);
 })(window, window.angular);
