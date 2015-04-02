@@ -149,41 +149,4 @@
       }
     };
   });
-
-
-  orbweaver.directive("wellCollapsible", function () {
-    var template =
-      '<div class="well well-small" ng-click="toggleCollapse()">' +
-      '  <div class="clearfix">' +
-      '  <div class="pull-right">' +
-      '    <span class="label" ng-show="isCollapsed">{{showText}} <i class="icon-large icon-double-angle-down"></i></span>' +
-      '    <span class="label" ng-hide="isCollapsed">{{hideText}} <i class="icon-large icon-double-angle-up"></i></span>' +
-      '  </div>' +
-      '  </div>' +
-      '  <div ng-hide="isCollapsed" ng-transclude>' +
-      '  </div>' +
-      '</div>';
-    return {
-      restrict: "EA",
-      template: template,
-      transclude: true,
-      controller: function ($scope, $element, $attrs) {
-        this.expandChild = function () {
-        };
-      },
-      link: function (scope, element, attrs, controller) {
-        scope.isCollapsed = true;
-        scope.toggleCollapse = function () {
-          console.log('toggle collapse called');
-          scope.isCollapsed = !scope.isCollapsed;
-          controller.expandChild();
-        };
-      },
-      scope: {
-        showText: "@",
-        hideText: "@"
-      }
-    };
-  });
-
 })(window, window.angular);
