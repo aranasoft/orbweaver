@@ -5,6 +5,7 @@
 
   orbweaver.factory("orbRestfulResource", ['$resource', function ($resource) {
     return function (url, params, methods) {
+      var idProperty = params['idProperty'] || 'id'
       var defaults = {
         update: {method: 'put', isArray: false},
         create: {method: 'post'}
@@ -15,7 +16,7 @@
       var resource = $resource(url, params, methods);
 
       resource.prototype.$save = function (params, success, failure) {
-        if (!this.id) {
+        if (!this['idProperty']) {
           this.$create(params, success, failure);
         } else {
           this.$update(params, success, failure);
