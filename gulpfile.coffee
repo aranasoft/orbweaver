@@ -30,7 +30,7 @@ gulp.task 'lint', ['install'], () ->
   gulp.src(config.files.js.app)
     .pipe(errorHandler())
     .pipe(plugins.jshint())
-    .pipe(plugins.jshint.reporter(jshintReporter))
+    .pipe(plugins.jshint.reporter(config.jshint.reporter))
 
 gulp.task 'watch', ['default'], (done) ->
   gulp.watch config.files.js.app, {debounceDelay: 2000}, ['lint','js']
