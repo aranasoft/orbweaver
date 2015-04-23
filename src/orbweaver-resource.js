@@ -4,9 +4,9 @@
   var orbweaver = angular.module('orbResource', ['ngResource']);
 
   orbweaver.factory("orbRestfulResource", ['$resource', function ($resource) {
-    return function (url, params, methods) {
+    return function (url, params, methods, options) {
       var idProperty = 'id';
-      if( params && params.idProperty ) { idProperty = params.idProperty; }
+      if( options && options.idProperty ) { idProperty = options.idProperty; }
 
       var defaults = {
         update: {method: 'put', isArray: false},
@@ -16,6 +16,7 @@
       methods = angular.extend(defaults, methods);
 
       var resource = $resource(url, params, methods);
+      resource.idProperty = idProperty;
 
       resource.prototype.$save = function (params, success, failure) {
         if (!this[idProperty]) {
@@ -34,12 +35,12 @@
       params = params || {};
       var deferred = $q.defer();
       fn(params,
-        function (response) {
-          deferred.resolve(response);
-        },
-        function (response) {
-          deferred.reject(response);
-        });
+          function (response) {
+            deferred.resolve(response);
+          },
+          function (response) {
+            deferred.reject(response);
+          });
       return deferred.promise;
     };
 
@@ -47,16 +48,18 @@
       params = params || {};
       var deferred = $q.defer();
       inst[fn](params,
-        function (response) {
-          deferred.resolve(response);
-        },
-        function (response) {
-          deferred.reject(response);
-        });
+          function (response) {
+            deferred.resolve(response);
+          },
+          function (response) {
+            deferred.reject(response);
+          });
       return deferred.promise;
     };
 
     return function (RestfulResource) {
+      var idProperty = RestfulResource.idProperty;
+
       return {
         empty: function () {
           return new RestfulResource();
@@ -66,13 +69,17 @@
         },
         find: function (id, params) {
           params = params || {};
-          params = angular.extend(params, {id: id});
+          var options = {};
+          options[idProperty] = id;
+          params = angular.extend(params, options);
           return defer(RestfulResource.get, params);
         },
         save: function (res, params) {
           params = params || {};
           if (res.id) {
-            params = angular.extend(params, {id: res.id});
+            var options = {};
+            options[idProperty] = res[idProperty];
+            params = angular.extend(params, options);
             return deferInstance(res, "$update", params);
           } else {
             return deferInstance(res, "$create", params);
@@ -80,7 +87,9 @@
         },
         'delete': function (res, params) {
           params = params || {};
-          params = angular.extend(params, {id: res.id});
+          var options = {};
+          options[idProperty] = res[idProperty];
+          params = angular.extend(params, options);
           return defer(RestfulResource['delete'], params);
         }
       };
