@@ -21,7 +21,11 @@ gulp.task 'install', () ->
 gulp.task 'js', ['install'], () ->
   gulp.src(config.files.js.app)
   .pipe(errorHandler())
-  .pipe(plugins.sourcemaps.init({loadMaps: true}))
+  .pipe(gulp.dest(config.output.jsDir))
+  .pipe(plugins.rename
+    suffix: ".min"
+    extname: ".js"
+  ).pipe(plugins.sourcemaps.init({loadMaps: true}))
   .pipe(plugins.uglify())
   .pipe(plugins.sourcemaps.write('./'))
   .pipe(gulp.dest(config.output.jsDir))
