@@ -2,8 +2,6 @@ gulp = require 'gulp'
 gutil = require 'gulp-util'
 config = require './gulpconfig.coffee'
 plugins = require('gulp-load-plugins')()
-jshintReporter = require 'jshint-stylish'
-
 
 gulp.task 'default', ['lint','build']
 
@@ -26,7 +24,7 @@ gulp.task 'js', ['install'], () ->
     suffix: ".min"
     extname: ".js"
   ).pipe(plugins.sourcemaps.init({loadMaps: true}))
-  .pipe(plugins.uglify())
+  .pipe(plugins.uglify(config.jsmin))
   .pipe(plugins.sourcemaps.write('./'))
   .pipe(gulp.dest(config.output.jsDir))
 
