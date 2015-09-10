@@ -2,6 +2,8 @@ gulp = require 'gulp'
 gutil = require 'gulp-util'
 config = require './gulpconfig.coffee'
 plugins = require('gulp-load-plugins')()
+pkg = require './package.json'
+fs = require 'fs'
 
 gulp.task 'default', ['lint','build']
 
@@ -19,6 +21,7 @@ gulp.task 'install', () ->
 gulp.task 'js', ['install'], () ->
   gulp.src(config.files.js.app)
   .pipe(errorHandler())
+  .pipe(plugins.header( fs.readFileSync('./src/orbweaver.prefix', 'utf8'), { pkg: pkg }))
   .pipe(gulp.dest(config.output.jsDir))
   .pipe(plugins.rename
     suffix: ".min"
