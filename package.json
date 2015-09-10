@@ -24,18 +24,20 @@
   },
   "homepage": "https://github.com/aranasoft/orbweaver",
   "devDependencies": {
-    "coffee-script": "^1.9.1",
-    "gulp": "^3.8.11",
+    "coffee-script": "^1.10.0",
+    "gulp": "^3.9.0",
     "gulp-bower": "0.0.10",
-    "gulp-jshint": "^1.10.0",
+    "gulp-jshint": "^1.11.2",
     "gulp-load-plugins": "^0.9.0",
-    "gulp-plumber": "^1.0.0",
+    "gulp-plumber": "^1.0.1",
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^1.5.1",
-    "gulp-uglify": "^1.1.0",
-    "gulp-util": "^3.0.4",
-    "gulp-watch": "^4.2.2",
-    "jshint-stylish": "^1.0.1",
+    "gulp-uglify": "^1.4.1",
+    "gulp-util": "^3.0.6",
+    "gulp-watch": "^4.3.5",
+    "jshint-stylish": "^2.0.1",
     "jshint-teamcity": "^1.0.6"
+  },
+  "dependencies": {
   }
 }
