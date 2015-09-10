@@ -3,65 +3,53 @@
 
   var orbweaver = angular.module('orbProgress', ['orbResource']);
 
-  orbweaver.factory("orbRestfulProgressService", ['$q', 'orbProgressService', function ($q, orbRestfulResource, orbProgressService) {
-    var defer = function (fn, params) {
-      params = params || {};
-      var deferred = $q.defer();
-      orbProgressService.start();
-      fn(params,
-        function (response) {
-          orbProgressService.done();
-          deferred.resolve(response);
-        },
-        function (response) {
-          orbProgressService.done();
-          deferred.reject(response);
-        });
-      return deferred.promise;
-    };
-
-    var deferInstance = function (inst, fn, params) {
-      params = params || {};
-      var deferred = $q.defer();
-      orbProgressService.start();
-      inst[fn](params,
-        function (response) {
-          orbProgressService.done();
-          deferred.resolve(response);
-        },
-        function (response) {
-          orbProgressService.done();
-          deferred.reject(response);
-        });
-      return deferred.promise;
-    };
-
+  orbweaver.factory("orbRestfulProgressService", ['$q', 'orbProgressService', function ($q, orbProgressService) {
     return function (RestfulResource) {
+      var idProperty = RestfulResource.idProperty;
+
       return {
         empty: function () {
           return new RestfulResource();
         },
         all: function (params) {
-          return defer(RestfulResource.query, params);
+          return RestfulResource.query(params).$promise;
         },
         find: function (id, params) {
           params = params || {};
-          params = angular.extend(params, {id: id});
-          return defer(RestfulResource.get, params);
+          var options = {};
+          options[idProperty] = id;
+          params = angular.extend(params, options);
+          orbProgressService.start();
+          return RestfulResource.get(params).$promise.finally(function() {
+            orbProgressService.done();
+          });
         },
-        save: function (res, params) {
+        save: function (inst, params) {
           params = params || {};
-          if (res.id) {
-            params = angular.extend(params, {id: res.id});
-            return deferInstance(res, "$update", params);
+          if (inst.id) {
+            var options = {};
+            options[idProperty] = inst[idProperty];
+            params = angular.extend(params, options);
+            orbProgressService.start();
+            return RestfulResource.update(params, inst).$promise.finally(function() {
+              orbProgressService.done();
+            });
           } else {
-            return deferInstance(res, "$create", params);
+            orbProgressService.start();
+            return RestfulResource.create(params, inst).$promise.finally(function() {
+              orbProgressService.done();
+            });
           }
         },
-        'delete': function (res, params) {
+        'delete': function (inst, params) {
           params = params || {};
-          params = angular.extend(params, {id: res.id});
-          return defer(RestfulResource['delete'], params);
+          var options = {};
+          options[idProperty] = inst[idProperty];
+          params = angular.extend(params, options);
+          orbProgressService.start();
+          return RestfulResource['delete'](params).$promise.finally(function() {
+            orbProgressService.done();
+          });
         }
       };
     };
@@ -93,5 +81,6 @@
       }
     };
   });
+
 })(window, window.angular);
 
