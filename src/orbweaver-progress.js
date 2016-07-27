@@ -26,7 +26,7 @@
         },
         save: function (inst, params) {
           params = params || {};
-          if (inst.id) {
+          if (inst[idProperty]) {
             var options = {};
             options[idProperty] = inst[idProperty];
             params = angular.extend(params, options);
