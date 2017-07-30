@@ -27,7 +27,7 @@
         };
 
         if (options.saveAsCreateOrUpdate !== false) {
-          RestfulProgressService.save = function (args) {
+          RestfulProgressService.save = function () {
             orbProgressService.start();
             var result = resource.save.apply(this, arguments);
             if (result.$promise) {
@@ -40,7 +40,7 @@
         }
 
         forEach(actions, function(action, name) {
-          RestfulProgressService[name] = function(args) {
+          RestfulProgressService[name] = function() {
             orbProgressService.start();
             var result = resource[name].apply(this, arguments);
             if (result.$promise) {
