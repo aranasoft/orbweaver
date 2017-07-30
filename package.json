@@ -1,6 +1,6 @@
 {
   "name": "orbweaver",
-  "version": "0.102.1",
+  "version": "1.0.0-beta.1",
   "description": "A collection of utilities for AngularJS Development",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,7 +16,8 @@
   "author": "Arana Software <info@aranasoft.com>",
   "contibutors": [
     "Dennis Burton <dburton@aranasoft.com>",
-    "Jay Harris <jay@aranasoft.com>"
+    "Jay Harris <jay@aranasoft.com>",
+    "Jeff Strauss <jeff@aranasoft.com>"
   ],
   "license": "BSD-3-Clause",
   "bugs": {
@@ -39,6 +40,5 @@
     "jshint-stylish": "^2.0.1",
     "jshint-teamcity": "^1.0.6"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
