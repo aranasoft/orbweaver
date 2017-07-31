@@ -1,6 +1,6 @@
 {
   "name": "orbweaver",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0",
   "description": "A collection of utilities for AngularJS Development",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
