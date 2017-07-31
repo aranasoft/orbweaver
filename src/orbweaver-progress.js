@@ -30,8 +30,8 @@
           RestfulProgressService.save = function () {
             orbProgressService.start();
             var result = resource.save.apply(this, arguments);
-            if (result.$promise) {
-              return result.$promise.finally(function() { orbProgressService.done(); });
+            if (result) {
+              return result.finally(function() { orbProgressService.done(); });
             } else {
               orbProgressService.done();
               return result;
@@ -43,8 +43,8 @@
           RestfulProgressService[name] = function() {
             orbProgressService.start();
             var result = resource[name].apply(this, arguments);
-            if (result.$promise) {
-              return result.$promise.finally(function() { orbProgressService.done(); });
+            if (result) {
+              return result.finally(function() { orbProgressService.done(); });
             } else {
               orbProgressService.done();
               return result;
